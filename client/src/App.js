@@ -22,15 +22,26 @@ function App() {
       console.log(error);
     }
   };
+  const deleteNotes = async (id) => {
+    try {
+      const { data } = await axios.post(`http://localhost:3000/notes/${id}`);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     postNotes({ title, body });
-    fetchNotes();
+    setBody("");
+    setTitle("");
   };
+
   useEffect(() => {
     fetchNotes();
-  }, []);
-  if (notes.length < 1) return <h1>Loading...</h1>;
+  }, [notes]);
+
   return (
     <div style={{ maxWidth: "800px", margin: "20px auto", padding: "2rem" }}>
       <form
@@ -55,11 +66,15 @@ function App() {
       </form>
 
       <div>
+        {notes.length < 1 && <h1>Loading...</h1>}
         {notes.map((note) => (
-          <div key={note._id}>
-            <h3>{note.title}</h3>
-            <p>{note.body}</p>
-          </div>
+          <>
+            <div key={note._id}>
+              <h3>{note.title}</h3>
+              <p>{note.body}</p>
+            </div>
+            <button onClick={() => deleteNotes(note._id)}>delete</button>
+          </>
         ))}
       </div>
     </div>

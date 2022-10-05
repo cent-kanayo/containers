@@ -36,7 +36,15 @@ app.post("/notes", async function (req, res) {
     console.log(error);
   }
 });
-
+app.delete("/notes/:id", async function (req, res) {
+  const { id } = req.params;
+  try {
+    const note = await Note.findByIdAndRemove(id);
+    res.json(note);
+  } catch (error) {
+    console.log(error);
+  }
+});
 app.get("/notes", async function (req, res) {
   try {
     const note = await Note.find();
